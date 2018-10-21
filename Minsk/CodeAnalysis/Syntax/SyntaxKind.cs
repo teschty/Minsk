@@ -8,16 +8,23 @@
         WhitespaceToken,
         NumberToken,
         PlusToken,
-        CloseParenToken,
         OpenParenToken,
         SlashToken,
         StarToken,
         MinusToken,
+        IdentifierToken,
+        BangToken,
+        AmpersandAmpersandToken,
+
+        // Keywords
+        FalseKeyword,
+        TrueKeyword,
 
         // Expressions
         LiteralExpression,
         BinaryExpression,
         ParenthesizedExpression,
-        UnaryExpression
+        UnaryExpression,
+        PipePipeToken,
     }
 }

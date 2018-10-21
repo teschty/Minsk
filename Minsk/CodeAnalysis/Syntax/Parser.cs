@@ -98,17 +98,31 @@ namespace Minsk.CodeAnalysis.Syntax
 
         private ExpressionSyntax ParsePrimaryExpression()
         {
-            if (Current.Kind == SyntaxKind.OpenParenToken)
+            switch (Current.Kind)
             {
-                var left = NextToken();
-                var expr = ParseExpression();
-                var right = MatchToken(SyntaxKind.CloseParenToken);
+                case SyntaxKind.OpenParenToken:
+                {
+                    var left = NextToken();
+                    var expr = ParseExpression();
+                    var right = MatchToken(SyntaxKind.BangToken);
 
-                return new ParenthesizedExpression(left, expr, right);
+                    return new ParenthesizedExpression(left, expr, right);
+                }
+
+                case SyntaxKind.TrueKeyword:
+                case SyntaxKind.FalseKeyword:
+                {
+                    var keywordToken = NextToken();
+                    var value = keywordToken.Kind == SyntaxKind.TrueKeyword;
+                    return new LiteralExpressionSyntax(keywordToken, value);
+                }
+
+                default:
+                {
+                    var numberToken = MatchToken(SyntaxKind.NumberToken);
+                    return new LiteralExpressionSyntax(numberToken);
+                }
             }
-
-            var numberToken = MatchToken(SyntaxKind.NumberToken);
-            return new LiteralExpressionSyntax(numberToken);
         }
     }
 }
