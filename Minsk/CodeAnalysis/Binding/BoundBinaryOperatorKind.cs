@@ -7,6 +7,8 @@
         Multiplication,
         Division,
         LogicalAnd,
-        Subtraction
+        Subtraction,
+        Equals,
+        NotEquals
     }
 }

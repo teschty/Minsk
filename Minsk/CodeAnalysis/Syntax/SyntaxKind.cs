@@ -26,5 +26,7 @@
         ParenthesizedExpression,
         UnaryExpression,
         PipePipeToken,
+        EqualsEqualsToken,
+        BangEqualsToken,
     }
 }
