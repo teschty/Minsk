@@ -79,7 +79,7 @@ namespace Minsk
 
             Console.WriteLine();
 
-            indent += isLast ? "   " : "│   ";
+            indent += isLast ? "   " : "│  ";
 
             var lastChild = node.GetChildren().LastOrDefault();
 

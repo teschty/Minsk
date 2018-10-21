@@ -2,9 +2,9 @@
 
 namespace Minsk.CodeAnalysis.Syntax
 {
-    public sealed class ParenthesizedExpression : ExpressionSyntax
+    public sealed class ParenthesizedExpressionSyntax : ExpressionSyntax
     {
-        public ParenthesizedExpression(SyntaxToken openParenToken, ExpressionSyntax expression, SyntaxToken closeParenToken)
+        public ParenthesizedExpressionSyntax(SyntaxToken openParenToken, ExpressionSyntax expression, SyntaxToken closeParenToken)
         {
             OpenParenToken = openParenToken;
             Expression = expression;

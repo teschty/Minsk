@@ -106,7 +106,7 @@ namespace Minsk.CodeAnalysis.Syntax
                     var expr = ParseExpression();
                     var right = MatchToken(SyntaxKind.BangToken);
 
-                    return new ParenthesizedExpression(left, expr, right);
+                    return new ParenthesizedExpressionSyntax(left, expr, right);
                 }
 
                 case SyntaxKind.TrueKeyword:
