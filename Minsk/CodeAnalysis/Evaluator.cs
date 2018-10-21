@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Text;
 
+using Minsk.CodeAnalysis.Syntax;
+
 namespace Minsk.CodeAnalysis
 {
     public sealed class Evaluator
@@ -9,7 +11,7 @@ namespace Minsk.CodeAnalysis
 
         public Evaluator(ExpressionSyntax root)
         {
-            this._root = root;
+            _root = root;
         }
 
         public int Evaluate()
@@ -21,6 +23,18 @@ namespace Minsk.CodeAnalysis
         {
             if (node is LiteralExpressionSyntax n)
                 return (int)n.LiteralToken.Value;
+
+            if (node is UnaryExpressionSyntax u)
+            {
+                var operand = EvaluateExpression(u.Operand);
+
+                if (u.OperatorToken.Kind == SyntaxKind.PlusToken)
+                    return operand;
+                else if (u.OperatorToken.Kind == SyntaxKind.MinusToken)
+                    return -operand;
+                else 
+                    throw new Exception($"Unexpected unary operator {u.OperatorToken.Kind}");
+            }
 
             if (node is BinaryExpressionSyntax b)
             {

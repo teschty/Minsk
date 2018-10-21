@@ -1,7 +1,8 @@
-﻿using Minsk.CodeAnalysis;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
+
+using Minsk.CodeAnalysis;
+using Minsk.CodeAnalysis.Syntax;
 
 namespace Minsk
 {
@@ -50,7 +51,7 @@ namespace Minsk
                 {
                     Console.ForegroundColor = ConsoleColor.DarkRed;
 
-                    foreach (var diagnostic in parser.Diagnostics)
+                    foreach (var diagnostic in syntaxTree.Diagnostics)
                         Console.WriteLine(diagnostic);
 
                     Console.ResetColor();
