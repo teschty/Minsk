@@ -30,5 +30,6 @@
         BinaryExpression,
         ParenthesizedExpression,
         UnaryExpression,
+        NameExpression,
     }
 }

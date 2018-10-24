@@ -9,7 +9,7 @@ namespace Minsk.CodeAnalysis.Syntax
             IdentifierToken = identifierToken;
         }
 
-        public override SyntaxKind Kind => SyntaxKind.AssignmentExpression;
+        public override SyntaxKind Kind => SyntaxKind.NameExpression;
         public SyntaxToken IdentifierToken { get; }
 
         public override IEnumerable<SyntaxNode> GetChildren()

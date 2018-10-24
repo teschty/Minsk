@@ -79,8 +79,9 @@ namespace Minsk.CodeAnalysis.Syntax
                 var operatorToken = NextToken();
                 var right = ParseAssignmentExpression();
                 return new AssignmentExpressionSyntax(identifierToken, operatorToken, right);
-
             }
+
+            return ParseBinaryExpression();
         }
 
         private ExpressionSyntax ParseBinaryExpression(int parentPrecedence = 0)
