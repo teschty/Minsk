@@ -9,6 +9,7 @@
         NumberToken,
         PlusToken,
         OpenParenToken,
+        CloseParenToken,
         SlashToken,
         StarToken,
         MinusToken,

@@ -90,7 +90,7 @@ namespace Minsk.CodeAnalysis.Syntax
                 case '(':
                     return new SyntaxToken(SyntaxKind.OpenParenToken, _position++, "(", null);
                 case ')':
-                    return new SyntaxToken(SyntaxKind.BangToken, _position++, ")", null);
+                    return new SyntaxToken(SyntaxKind.CloseParenToken, _position++, ")", null);
                 case '&':
                     if (Lookahead == '&')
                     {
@@ -112,7 +112,7 @@ namespace Minsk.CodeAnalysis.Syntax
                         return new SyntaxToken(SyntaxKind.EqualsEqualsToken, start, "==", null);
                     } else
                     {
-                        _position += 2;
+                        _position += 1;
                         return new SyntaxToken(SyntaxKind.EqualsToken, start, "=", null);
                     }
                     break;
