@@ -84,7 +84,8 @@ namespace Minsk.CodeAnalysis.Syntax
                     break;
                 case '=':
                     _position++;
-                    if (Current != '=') {
+                    if (Current != '=') 
+                    {
                         _kind = SyntaxKind.EqualsToken;
                     }
                     else 
