@@ -19,7 +19,7 @@ namespace Minsk.CodeAnalysis.Syntax
             }
         }
 
-        public static IEnumerable<SyntaxKind> GetUnaryOperators()
+        public static IEnumerable<SyntaxKind> GetUnaryOperatorKinds()
         {
             var kinds = (SyntaxKind[])Enum.GetValues(typeof(SyntaxKind));
 
