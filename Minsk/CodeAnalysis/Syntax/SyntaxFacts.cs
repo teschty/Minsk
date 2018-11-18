@@ -1,8 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Minsk.CodeAnalysis.Syntax
 {
-    internal static class SyntaxFacts
+    public static class SyntaxFacts
     {
         public static int GetUnaryOperatorPrecedence(this SyntaxKind kind)
         {
@@ -15,6 +16,28 @@ namespace Minsk.CodeAnalysis.Syntax
 
                 default:
                     return 0;
+            }
+        }
+
+        public static IEnumerable<SyntaxKind> GetUnaryOperators()
+        {
+            var kinds = (SyntaxKind[])Enum.GetValues(typeof(SyntaxKind));
+
+            foreach (var kind in kinds) 
+            {
+                if (GetUnaryOperatorPrecedence(kind) > 0) 
+                    yield return kind;
+            }
+        }
+
+        public static IEnumerable<SyntaxKind> GetBinaryOperatorKinds()
+        {
+            var kinds = (SyntaxKind[])Enum.GetValues(typeof(SyntaxKind));
+
+            foreach (var kind in kinds) 
+            {
+                if (GetBinaryOperatorPrecedence(kind) > 0) 
+                    yield return kind;
             }
         }
 
@@ -55,6 +78,43 @@ namespace Minsk.CodeAnalysis.Syntax
                     return SyntaxKind.FalseKeyword;
                 default:
                     return SyntaxKind.IdentifierToken;
+            }
+        }
+
+        public static string GetText(SyntaxKind kind) 
+        {
+            switch (kind) 
+            {
+                case SyntaxKind.PlusToken:
+                    return "+";
+                case SyntaxKind.MinusToken:
+                    return "-";
+                case SyntaxKind.StarToken:
+                    return "*";
+                case SyntaxKind.SlashToken:
+                    return "/";
+                case SyntaxKind.BangToken:
+                    return "!";
+                case SyntaxKind.OpenParenToken:
+                    return "(";
+                case SyntaxKind.CloseParenToken:
+                    return ")";
+                case SyntaxKind.AmpersandAmpersandToken:
+                    return "&&";
+                case SyntaxKind.PipePipeToken:
+                    return "||";
+                case SyntaxKind.EqualsEqualsToken:
+                    return "==";
+                case SyntaxKind.EqualsToken:
+                    return "=";
+                case SyntaxKind.BangEqualsToken:
+                    return "!=";
+                case SyntaxKind.FalseKeyword:
+                    return "false";
+                case SyntaxKind.TrueKeyword:
+                    return "true";
+                default:
+                    return null;
             }
         }
     }
