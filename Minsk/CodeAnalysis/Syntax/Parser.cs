@@ -122,7 +122,7 @@ namespace Minsk.CodeAnalysis.Syntax
                 {
                     var left = NextToken();
                     var expr = ParseExpression();
-                    var right = MatchToken(SyntaxKind.BangToken);
+                    var right = MatchToken(SyntaxKind.CloseParenToken);
 
                     return new ParenthesizedExpressionSyntax(left, expr, right);
                 }
