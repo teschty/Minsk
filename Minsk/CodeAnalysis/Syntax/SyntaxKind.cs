@@ -10,6 +10,8 @@
         PlusToken,
         OpenParenToken,
         CloseParenToken,
+        OpenBraceToken,
+        CloseBraceToken,
         SlashToken,
         StarToken,
         MinusToken,
@@ -27,6 +29,10 @@
 
         // Nodes
         CompilationUnit,
+
+        // Statements
+        BlockStatement,
+        ExpressionStatement,
 
         // Expressions
         LiteralExpression,
