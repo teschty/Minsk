@@ -10,6 +10,8 @@
         PlusToken,
         OpenParenToken,
         CloseParenToken,
+        OpenBraceToken,
+        CloseBraceToken,
         SlashToken,
         StarToken,
         MinusToken,
@@ -24,6 +26,16 @@
         // Keywords
         FalseKeyword,
         TrueKeyword,
+        LetKeyword,
+        VarKeyword,
+
+        // Nodes
+        CompilationUnit,
+
+        // Statements
+        BlockStatement,
+        VariableDeclaration,
+        ExpressionStatement,
 
         // Expressions
         LiteralExpression,
