@@ -1,4 +1,5 @@
 ﻿using Minsk.CodeAnalysis.Text;
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 
@@ -9,6 +10,7 @@ namespace Minsk.CodeAnalysis.Syntax
         private readonly DiagnosticBag _diagnostics = new DiagnosticBag();
         private readonly ImmutableArray<SyntaxToken> _tokens;
         private readonly SourceText _text;
+
         private int _position;
 
         public Parser(SourceText text)
@@ -62,12 +64,12 @@ namespace Minsk.CodeAnalysis.Syntax
             return new SyntaxToken(kind, Current.Position, null, null);
         }
 
-        public SyntaxTree Parse()
+        public CompilationUnitSyntax ParseCompilationUnit()
         {
             var expr = ParseExpression();
             var endOfFileToken = MatchToken(SyntaxKind.EndOfFileToken);
 
-            return new SyntaxTree(_text, _diagnostics.ToImmutableArray(), expr, endOfFileToken);
+            return new CompilationUnitSyntax(expr, endOfFileToken);
         }
 
         private ExpressionSyntax ParseExpression()
