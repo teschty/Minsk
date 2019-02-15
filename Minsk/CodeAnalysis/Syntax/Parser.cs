@@ -82,9 +82,10 @@ namespace Minsk.CodeAnalysis.Syntax
                 case SyntaxKind.LetKeyword:
                 case SyntaxKind.VarKeyword:
                     return ParseVariableDeclaration();
-
                 case SyntaxKind.IfKeyword:
                     return ParseIfStatement();
+                case SyntaxKind.WhileKeyword:
+                    return ParseWhileStatement();
 
                 default:
                     return ParseExpressionStatement();
@@ -99,6 +100,15 @@ namespace Minsk.CodeAnalysis.Syntax
             var elseClause = ParseElseClause();
 
             return new IfStatementSyntax(keyword, condition, statement, elseClause);
+        }
+
+        private StatementSyntax ParseWhileStatement()
+        {
+            var keyword = MatchToken(SyntaxKind.WhileKeyword);
+            var condition = ParseExpression();
+            var body = ParseStatement();
+
+            return new WhileStatementSyntax(keyword, condition, body);
         }
 
         private ElseClauseSyntax ParseElseClause()

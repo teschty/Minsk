@@ -80,6 +80,8 @@ namespace Minsk.CodeAnalysis.Syntax
                     return SyntaxKind.FalseKeyword;
                 case "if":
                     return SyntaxKind.IfKeyword;
+                case "while":
+                    return SyntaxKind.WhileKeyword;
                 case "else":
                     return SyntaxKind.ElseKeyword;
                 case "true":
@@ -145,6 +147,9 @@ namespace Minsk.CodeAnalysis.Syntax
                     return "if";
                 case SyntaxKind.ElseKeyword:
                     return "else";
+                case SyntaxKind.WhileKeyword:
+                    return "while";
+
                 default:
                     return null;
             }
