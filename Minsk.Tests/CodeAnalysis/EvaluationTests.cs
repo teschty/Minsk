@@ -81,7 +81,7 @@ namespace Minsk.Tests.CodeAnalysis
         }
 
         [Fact]
-        public void Evaluator_Name_Reports_Undefined()
+        public void Evaluator_NameExpression_Reports_Undefined()
         {
             var text = @"[x] * 10";
 
@@ -93,7 +93,7 @@ namespace Minsk.Tests.CodeAnalysis
         }
         
         [Fact]
-        public void Evaluator_Assigned_Reports_Undefined()
+        public void Evaluator_AssignmentExpression_Reports_Undefined()
         {
             var text = @"[x] = 10";
 
@@ -105,7 +105,7 @@ namespace Minsk.Tests.CodeAnalysis
         }
 
         [Fact]
-        public void Evaluator_Assigned_Reports_CannotAssign()
+        public void Evaluator_AssignmentExpression_Reports_CannotAssign()
         {
             var text = @"
                 {
