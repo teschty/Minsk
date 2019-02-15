@@ -40,6 +40,7 @@
         BlockStatement,
         VariableDeclaration,
         ExpressionStatement,
+        IfStatement,
 
         // Expressions
         LiteralExpression,
@@ -48,5 +49,8 @@
         ParenthesizedExpression,
         UnaryExpression,
         NameExpression,
+        ElseClause,
+        IfKeyword,
+        ElseKeyword,
     }
 }
