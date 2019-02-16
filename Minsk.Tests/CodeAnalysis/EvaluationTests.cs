@@ -58,7 +58,7 @@ namespace Minsk.Tests.CodeAnalysis
         }
 
         [Fact]
-        public void Evaluator_VariableDeclaration_Reports_Redeclaration()
+        public void Evaluator_VariableDeclaration_declaration()
         {
             var text = @"
                 {
@@ -79,6 +79,22 @@ namespace Minsk.Tests.CodeAnalysis
 
             AssertDiagnostiscs(text, diagnostics);
         }
+        
+        [Fact]
+        public void Evaluator_BlockStatement_NoInfiniteLoop()
+        {
+            var text = @"
+                {
+                [)][]
+            ";
+
+            var diagnostics = @"
+                Unexpected token <CloseParenToken>, expected <IdentifierToken>.
+                Unexpected token <EndOfFileToken>, expected <CloseBraceToken>.
+            ";
+
+            AssertDiagnostiscs(text, diagnostics);
+        }
 
         [Fact]
         public void Evaluator_NameExpression_Reports_Undefined()
@@ -87,6 +103,18 @@ namespace Minsk.Tests.CodeAnalysis
 
             var diagnostics = @"
                 Variable 'x' doesn't exist.
+            ";
+
+            AssertDiagnostiscs(text, diagnostics);
+        }
+
+        [Fact]
+        public void Evaluator_NameExpression_Reports_NoErrorForInsertedToken()
+        {
+            var text = @"[]";
+
+            var diagnostics = @"
+                Unexpected token <EndOfFileToken>, expected <IdentifierToken>.
             ";
 
             AssertDiagnostiscs(text, diagnostics);
