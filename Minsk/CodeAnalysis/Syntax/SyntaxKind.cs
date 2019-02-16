@@ -22,12 +22,21 @@
         EqualsEqualsToken,
         EqualsToken,
         BangEqualsToken,
+        LessToken,
+        LessOrEqualsToken,
+        GreaterToken,
+        GreaterOrEqualsToken,
 
         // Keywords
         FalseKeyword,
         TrueKeyword,
         LetKeyword,
         VarKeyword,
+        IfKeyword,
+        ElseKeyword,
+        WhileKeyword,
+        ForKeyword,
+        ToKeyword,
 
         // Nodes
         CompilationUnit,
@@ -36,6 +45,9 @@
         BlockStatement,
         VariableDeclaration,
         ExpressionStatement,
+        IfStatement,
+        WhileStatement,
+        ForStatement,
 
         // Expressions
         LiteralExpression,
@@ -44,5 +56,6 @@
         ParenthesizedExpression,
         UnaryExpression,
         NameExpression,
+        ElseClause,
     }
 }
