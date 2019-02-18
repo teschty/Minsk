@@ -77,18 +77,32 @@ namespace Minsk.CodeAnalysis.Syntax
                     _kind = SyntaxKind.CloseBraceToken;
                     _position++;
                     break;
+                case '~':
+                    _kind = SyntaxKind.TildeToken;
+                    _position++;
+                    break;
+                case '^':
+                    _kind = SyntaxKind.HatToken;
+                    _position++;
+                    break;
                 case '&':
-                    if (Lookahead == '&')
+                    _position++;
+                    if (Current == '&')
                     {
-                        _position += 2;
+                        _position++;
                         _kind = SyntaxKind.AmpersandAmpersandToken;
+                    } else {
+                        _kind = SyntaxKind.AmpersandToken;
                     }
                     break;
                 case '|':
-                    if (Lookahead == '|')
+                    _position++;
+                    if (Current == '|')
                     {
-                        _position += 2;
+                        _position++;
                         _kind = SyntaxKind.PipePipeToken;
+                    } else {
+                        _kind = SyntaxKind.PipeToken;
                     }
                     break;
                 case '=':
