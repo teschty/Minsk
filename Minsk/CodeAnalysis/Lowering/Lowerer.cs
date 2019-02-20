@@ -70,16 +70,19 @@ namespace Minsk.CodeAnalysis.Lowering
 
          var varDecl = new BoundVariableDeclaration(node.Variable, node.LowerBound);
          var varExpression = new BoundVariableExpression(node.Variable);
+         var upperBoundSymbol = new VariableSymbol("upperBound", true, typeof(int));
+         var upperBoundDecl = new BoundVariableDeclaration(upperBoundSymbol, node.UpperBound);
 
          var condition = new BoundBinaryExpression(
             varExpression,
             BoundBinaryOperator.Bind(SyntaxKind.LessOrEqualsToken, typeof(int), typeof(int)),
-            node.UpperBound);
+            new BoundVariableExpression(upperBoundSymbol)
+         );
 
          var increment = new BoundExpressionStatement(
             new BoundAssignmentExpression(node.Variable,
                new BoundBinaryExpression(
-                  new BoundVariableExpression(node.Variable),
+                  varExpression,
                   BoundBinaryOperator.Bind(SyntaxKind.PlusToken, typeof(int), typeof(int)),
                   new BoundLiteralExpression(1)
                )
@@ -88,7 +91,9 @@ namespace Minsk.CodeAnalysis.Lowering
 
          var whileBlock = new BoundBlockStatement(ImmutableArray.Create<BoundStatement>(node.Body, increment));        
          var whileStatement = new BoundWhileStatement(condition, whileBlock);
-         var result = new BoundBlockStatement(ImmutableArray.Create<BoundStatement>(varDecl, whileStatement));
+         var result = new BoundBlockStatement(ImmutableArray.Create<BoundStatement>(
+            varDecl, upperBoundDecl, whileStatement
+         ));
 
          return RewriteStatement(result);
       }
@@ -135,7 +140,7 @@ namespace Minsk.CodeAnalysis.Lowering
          if (node.ElseStatement == null) 
          {
             var endLabel = GenerateLabel("EndIf");
-            var gotoFalse = new BoundConditionalGotoStatement(endLabel, node.Condition, true);
+            var gotoFalse = new BoundConditionalGotoStatement(endLabel, node.Condition, false);
             var endLabelStatement = new BoundLabelStatement(endLabel);
             var result = new BoundBlockStatement(ImmutableArray.Create<BoundStatement>(
                gotoFalse, node.ThenStatement, endLabelStatement
@@ -148,7 +153,7 @@ namespace Minsk.CodeAnalysis.Lowering
             var endLabel = GenerateLabel("EndIf");
             var elseLabel = GenerateLabel("IfElse");
 
-            var gotoFalse = new BoundConditionalGotoStatement(elseLabel, node.Condition, true);
+            var gotoFalse = new BoundConditionalGotoStatement(elseLabel, node.Condition, false);
             var gotoEndStatement = new BoundGotoStatement(endLabel);
             var elseLabelStatement = new BoundLabelStatement(elseLabel);
             var endLabelStatement = new BoundLabelStatement(endLabel);
