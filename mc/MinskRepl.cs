@@ -65,10 +65,18 @@ namespace Minsk
 
             var syntaxTree = SyntaxTree.Parse(text);
 
-            if (syntaxTree.Diagnostics.Any())
+            if (GetLastToken(syntaxTree.Root.Statement).IsMissing)
                 return false;
 
             return true;
+        }
+
+        public static SyntaxToken GetLastToken(SyntaxNode node)
+        {
+            if (node is SyntaxToken token)
+                return token;
+
+            return GetLastToken(node.GetChildren().Last());
         }
 
         protected override void EvaluateSubmission(string text)
