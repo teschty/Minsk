@@ -30,6 +30,7 @@
         AmpersandToken,
         PipeToken,
         HatToken,
+        StringToken,
 
         // Keywords
         FalseKeyword,
