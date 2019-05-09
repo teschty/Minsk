@@ -15,10 +15,10 @@ namespace Minsk.CodeAnalysis.Lowering
 
       }
 
-      private LabelSymbol GenerateLabel(string label = "Label")
+      private BoundLabel GenerateLabel(string label = "Label")
       {
          var name = $"{label}{++_labelCount}";
-         return new LabelSymbol(name);
+         return new BoundLabel(name);
       }
 
       public static BoundBlockStatement Lower(BoundStatement statement)
