@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Minsk.CodeAnalysis;
+using Minsk.CodeAnalysis.Symbols;
 using Minsk.CodeAnalysis.Syntax;
 using Minsk.CodeAnalysis.Text;
 
@@ -66,6 +67,15 @@ namespace Minsk
         protected override bool IsCompleteSubmission(string text)
         {
             if (string.IsNullOrEmpty(text))
+                return true;
+
+            var lastTwoLinesAreBlank = text.Split(Environment.NewLine)
+                                           .Reverse()
+                                           .TakeWhile(s => string.IsNullOrEmpty(s))
+                                           .Take(2)
+                                           .Count() == 2;
+
+            if (lastTwoLinesAreBlank)
                 return true;
 
             var syntaxTree = SyntaxTree.Parse(text);

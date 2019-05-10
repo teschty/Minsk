@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using Minsk.CodeAnalysis.Binding;
+using Minsk.CodeAnalysis.Symbols;
 using Minsk.CodeAnalysis.Syntax;
 
 namespace Minsk.CodeAnalysis.Lowering
@@ -15,10 +16,10 @@ namespace Minsk.CodeAnalysis.Lowering
 
       }
 
-      private LabelSymbol GenerateLabel(string label = "Label")
+      private BoundLabel GenerateLabel(string label = "Label")
       {
          var name = $"{label}{++_labelCount}";
-         return new LabelSymbol(name);
+         return new BoundLabel(name);
       }
 
       public static BoundBlockStatement Lower(BoundStatement statement)
@@ -70,12 +71,12 @@ namespace Minsk.CodeAnalysis.Lowering
 
          var varDecl = new BoundVariableDeclaration(node.Variable, node.LowerBound);
          var varExpression = new BoundVariableExpression(node.Variable);
-         var upperBoundSymbol = new VariableSymbol("upperBound", true, typeof(int));
+         var upperBoundSymbol = new VariableSymbol("upperBound", true, TypeSymbol.Int);
          var upperBoundDecl = new BoundVariableDeclaration(upperBoundSymbol, node.UpperBound);
 
          var condition = new BoundBinaryExpression(
             varExpression,
-            BoundBinaryOperator.Bind(SyntaxKind.LessOrEqualsToken, typeof(int), typeof(int)),
+            BoundBinaryOperator.Bind(SyntaxKind.LessOrEqualsToken, TypeSymbol.Int, TypeSymbol.Int),
             new BoundVariableExpression(upperBoundSymbol)
          );
 
@@ -83,7 +84,7 @@ namespace Minsk.CodeAnalysis.Lowering
             new BoundAssignmentExpression(node.Variable,
                new BoundBinaryExpression(
                   varExpression,
-                  BoundBinaryOperator.Bind(SyntaxKind.PlusToken, typeof(int), typeof(int)),
+                  BoundBinaryOperator.Bind(SyntaxKind.PlusToken, TypeSymbol.Int, TypeSymbol.Int),
                   new BoundLiteralExpression(1)
                )
             )
