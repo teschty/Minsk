@@ -248,7 +248,7 @@ namespace Minsk.CodeAnalysis.Syntax
 
                 case SyntaxKind.IdentifierToken:
                 default:
-                    return ParseNameExpression();
+                    return ParseNameOrCallExpression();
             }
         }
 
@@ -278,6 +278,43 @@ namespace Minsk.CodeAnalysis.Syntax
             var isTrue = Current.Kind == SyntaxKind.TrueKeyword;
             var keywordToken = isTrue ? MatchToken(SyntaxKind.TrueKeyword) : MatchToken(SyntaxKind.FalseKeyword);
             return new LiteralExpressionSyntax(keywordToken, isTrue);
+        }
+
+        private ExpressionSyntax ParseNameOrCallExpression()
+        {
+            if (Peek(0).Kind == SyntaxKind.IdentifierToken && Peek(1).Kind == SyntaxKind.OpenParenToken)
+                return ParseCallExpression();
+            
+            return ParseNameExpression();
+        }
+
+        private ExpressionSyntax ParseCallExpression()
+        {
+            var identifier = MatchToken(SyntaxKind.IdentifierToken);
+            var openParenToken = MatchToken(SyntaxKind.OpenParenToken);
+            var arguments = ParseArguments();
+            var closeParenToken = MatchToken(SyntaxKind.CloseParenToken);
+
+            return new CallExpressionSyntax(identifier, openParenToken, arguments, closeParenToken);
+        }
+
+        private SeparatedSyntaxList<ExpressionSyntax> ParseArguments()
+        {
+            var nodesAndSeparators = ImmutableArray.CreateBuilder<SyntaxNode>();
+
+            while (Current.Kind != SyntaxKind.CloseParenToken && Current.Kind != SyntaxKind.EndOfFileToken)
+            {
+                var expr = ParseExpression();
+                nodesAndSeparators.Add(expr);
+
+                if (Current.Kind != SyntaxKind.CloseParenToken)
+                {
+                    var comma = MatchToken(SyntaxKind.CommaToken);
+                    nodesAndSeparators.Add(comma);
+                }
+            }
+
+            return new SeparatedSyntaxList<ExpressionSyntax>(nodesAndSeparators.ToImmutable());
         }
 
         private ExpressionSyntax ParseNameExpression()

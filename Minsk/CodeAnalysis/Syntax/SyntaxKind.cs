@@ -31,6 +31,7 @@
         PipeToken,
         HatToken,
         StringToken,
+        CommaToken,
 
         // Keywords
         FalseKeyword,
@@ -45,6 +46,7 @@
 
         // Nodes
         CompilationUnit,
+        ElseClause,
 
         // Statements
         BlockStatement,
@@ -61,6 +63,6 @@
         ParenthesizedExpression,
         UnaryExpression,
         NameExpression,
-        ElseClause,
+        CallExpression,
     }
 }
