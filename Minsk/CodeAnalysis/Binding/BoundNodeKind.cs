@@ -21,5 +21,6 @@
         VariableExpression,
         AssignmentExpression,
         CallExpression,
+        ConversionExpression,
     }
 }

@@ -155,6 +155,8 @@ namespace Minsk.CodeAnalysis.Binding
                     return RewriteAssignmentExpression((BoundAssignmentExpression)node);
                 case BoundNodeKind.CallExpression:
                     return RewriteBoundCallExpression((BoundCallExpression)node);
+                case BoundNodeKind.ConversionExpression:
+                    return RewriteBoundConversionExpression((BoundConversionExpression)node);
 
                 default:
                     throw new Exception($"Unexpected node: {node.Kind}");
@@ -232,6 +234,16 @@ namespace Minsk.CodeAnalysis.Binding
                 return node;
 
             return new BoundCallExpression(node.Function, builder.MoveToImmutable());
+        }
+
+        protected virtual BoundExpression RewriteBoundConversionExpression(BoundConversionExpression node)
+        {
+            var expression = RewriteExpression(node.Expression);
+
+            if (expression == node.Expression)
+                return node;
+
+            return new BoundConversionExpression(node.Type, expression);
         }
     }
 }
