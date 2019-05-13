@@ -80,6 +80,10 @@ namespace Minsk.CodeAnalysis.Syntax
                     _kind = SyntaxKind.CloseBraceToken;
                     _position++;
                     break;
+                case ',':
+                    _kind = SyntaxKind.CommaToken;
+                    _position++;
+                    break;
                 case '~':
                     _kind = SyntaxKind.TildeToken;
                     _position++;
@@ -264,7 +268,7 @@ namespace Minsk.CodeAnalysis.Syntax
 
         private void ReadIdentifierOrKeyword()
         {
-            while (char.IsLetter(Current))
+            while (char.IsLetter(Current) || Current == '_')
                 _position++;
 
             var length = _position - _start;
