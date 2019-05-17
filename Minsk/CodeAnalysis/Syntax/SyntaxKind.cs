@@ -32,6 +32,7 @@
         HatToken,
         StringToken,
         CommaToken,
+        ColonToken,
 
         // Keywords
         FalseKeyword,
