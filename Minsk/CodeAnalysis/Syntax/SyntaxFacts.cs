@@ -139,6 +139,8 @@ namespace Minsk.CodeAnalysis.Syntax
                     return "}";
                 case SyntaxKind.CommaToken:
                     return ",";
+                case SyntaxKind.ColonToken:
+                    return ":";
                 case SyntaxKind.AmpersandAmpersandToken:
                     return "&&";
                 case SyntaxKind.AmpersandToken:

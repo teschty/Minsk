@@ -49,6 +49,7 @@
         // Nodes
         CompilationUnit,
         ElseClause,
+        TypeClause,
 
         // Statements
         BlockStatement,
