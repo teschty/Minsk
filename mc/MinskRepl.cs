@@ -112,9 +112,10 @@ namespace Minsk
                     Console.ForegroundColor = ConsoleColor.White;
                     Console.WriteLine(result.Value);
                     Console.ResetColor();
+                }
+
                     _previous = compilation;
                 }
-            }
             else
             {
                 foreach (var diagnostic in result.Diagnostics)
