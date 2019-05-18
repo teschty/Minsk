@@ -80,6 +80,12 @@ namespace Minsk.CodeAnalysis
             Report(span, message);
         }
 
+        public void ReportParameterAlreadyDeclared(TextSpan span, string parameterName)
+        {
+            var message = $"A parameter with the name '{parameterName}' was already declared.";
+            Report(span, message);
+        }
+
         public void ReportCannotConvert(TextSpan span, TypeSymbol fromType, TypeSymbol toType)
         {
             var message = $"Cannot convert type '{fromType}' to '{toType}'.";
@@ -122,5 +128,10 @@ namespace Minsk.CodeAnalysis
             Report(span, message);
         }
 
+        public void XXX_ReportFunctionsAreUnsupported(TextSpan span)
+        {
+            var message = $"Function with return values are unsupported.";
+            Report(span, message);
+        }
     }
 }

@@ -83,7 +83,7 @@ namespace Minsk
 
             var syntaxTree = SyntaxTree.Parse(text);
 
-            if (syntaxTree.Root.Statement.GetLastToken().IsMissing)
+            if (syntaxTree.Root.Members.Last().GetLastToken().IsMissing)
                 return false;
 
             return true;
@@ -114,8 +114,8 @@ namespace Minsk
                     Console.ResetColor();
                 }
 
-                    _previous = compilation;
-                }
+                _previous = compilation;
+            }
             else
             {
                 foreach (var diagnostic in result.Diagnostics)

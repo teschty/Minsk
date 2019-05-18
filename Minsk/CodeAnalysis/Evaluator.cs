@@ -8,7 +8,8 @@ namespace Minsk.CodeAnalysis
     internal sealed class Evaluator
     {
         private readonly BoundBlockStatement _root;
-        private readonly Dictionary<VariableSymbol, object> _variables;
+        private readonly Dictionary<VariableSymbol, object> _globals;
+        private readonly Stack<Dictionary<VariableSymbol, object>> _locals = new Stack<Dictionary<VariableSymbol, object>>();
         private Random _random;
 
         private object _lastValue;
@@ -16,25 +17,30 @@ namespace Minsk.CodeAnalysis
         public Evaluator(BoundBlockStatement root, Dictionary<VariableSymbol, object> variables)
         {
             _root = root;
-            _variables = variables;
+            _globals = variables;
         }
 
         public object Evaluate()
         {
+            return EvaluateStatement(_root);
+        }
+
+        private object EvaluateStatement(BoundBlockStatement body)
+        {
             var labelToIndex = new Dictionary<BoundLabel, int>();
 
-            for (var i = 0; i < _root.Statements.Length; i++)
+            for (var i = 0; i < body.Statements.Length; i++)
             {
-                if (_root.Statements[i] is BoundLabelStatement l)
+                if (body.Statements[i] is BoundLabelStatement l)
                 {
                     labelToIndex.Add(l.Label, i + 1);
                 }
             }
 
             var index = 0;
-            while (index < _root.Statements.Length)
+            while (index < body.Statements.Length)
             {
-                var s = _root.Statements[index];
+                var s = body.Statements[index];
                 switch (s.Kind)
                 {
                     case BoundNodeKind.VariableDeclaration:
@@ -79,7 +85,7 @@ namespace Minsk.CodeAnalysis
         private void EvaluateVariableDeclaration(BoundVariableDeclaration node)
         {
             var value = EvaluateExpression(node.Initializer);
-            _variables[node.Variable] = value;
+            _globals[node.Variable] = value;
             _lastValue = value;
         }
 
@@ -195,16 +201,25 @@ namespace Minsk.CodeAnalysis
             }
         }
 
-        private object EvaluateAssignmentExpression(BoundAssignmentExpression a)
-        {
-            var value = EvaluateExpression(a.Expression);
-            _variables[a.Variable] = value;
-            return value;
-        }
-
         private object EvaluateVariableExpression(BoundVariableExpression v)
         {
-            return _variables[v.Variable];
+            if (_locals.Count > 0)
+            {
+                var locals = _locals.Peek();
+
+                if (locals.TryGetValue(v.Variable, out var value)) 
+                    return value;
+            }
+            
+            return _globals[v.Variable];
+        }
+
+        private object EvaluateAssignmentExpression(BoundAssignmentExpression a)
+        {
+            // TODO: we need to store locals in our stack frame, not in the global dictionary.
+            var value = EvaluateExpression(a.Expression);
+            _globals[a.Variable] = value;
+            return value;
         }
 
         private static object EvaluateLiteralExpression(BoundLiteralExpression n)
@@ -234,7 +249,16 @@ namespace Minsk.CodeAnalysis
             }
             else
             {
-                throw new Exception($"Unexpected function {node.Function}");
+                var locals = new Dictionary<VariableSymbol, object>();
+                for (int i = 0; i < node.Arguments.Length; i++)
+                {
+                    var parameter = node.Function.Parameters[i];
+                    var value = EvaluateExpression(node.Arguments[i]);
+                    locals.Add(parameter, value);
+                }
+
+                _locals.Push(locals);
+                return Evaluate(node.Function);
             }
         }
 

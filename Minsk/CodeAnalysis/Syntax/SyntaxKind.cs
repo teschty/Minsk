@@ -45,11 +45,15 @@
         ForKeyword,
         ToKeyword,
         DoKeyword,
+        FunctionKeyword,
 
         // Nodes
         CompilationUnit,
         ElseClause,
         TypeClause,
+        FunctionDeclaration,
+        GlobalStatement,
+        Parameter,
 
         // Statements
         BlockStatement,

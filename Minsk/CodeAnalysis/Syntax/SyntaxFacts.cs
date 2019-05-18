@@ -90,6 +90,8 @@ namespace Minsk.CodeAnalysis.Syntax
                     return SyntaxKind.DoKeyword;
                 case "for":
                     return SyntaxKind.ForKeyword;
+                case "function":
+                    return SyntaxKind.FunctionKeyword;
                 case "else":
                     return SyntaxKind.ElseKeyword;
                 case "true":
@@ -177,6 +179,8 @@ namespace Minsk.CodeAnalysis.Syntax
                     return "for";
                 case SyntaxKind.ToKeyword:
                     return "to";
+                case SyntaxKind.FunctionKeyword:
+                    return "function";
 
                 default:
                     return null;

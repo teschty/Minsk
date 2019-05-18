@@ -47,7 +47,6 @@ namespace Minsk.CodeAnalysis.Binding
                 return false;
 
             return Parent.TryLookupSymbol(name, out symbol);
-
         }
 
         public bool TryDeclareVariable(VariableSymbol variable) => TryDeclareSymbol(variable);
