@@ -14,7 +14,6 @@ namespace Minsk.CodeAnalysis
 
         private object _lastValue;
         private BoundProgram _program;
-        private Dictionary<VariableSymbol, object> variables;
 
         public Evaluator(BoundProgram program, Dictionary<VariableSymbol, object> variables)
         {
