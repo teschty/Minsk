@@ -32,6 +32,7 @@
         HatToken,
         StringToken,
         CommaToken,
+        ColonToken,
 
         // Keywords
         FalseKeyword,
@@ -44,10 +45,15 @@
         ForKeyword,
         ToKeyword,
         DoKeyword,
+        FunctionKeyword,
 
         // Nodes
         CompilationUnit,
         ElseClause,
+        TypeClause,
+        FunctionDeclaration,
+        GlobalStatement,
+        Parameter,
 
         // Statements
         BlockStatement,

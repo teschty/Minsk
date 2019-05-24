@@ -1,5 +1,6 @@
 namespace Minsk.CodeAnalysis.Syntax
 {
+
     public sealed class ElseClauseSyntax : SyntaxNode
     {
         public ElseClauseSyntax(SyntaxToken elseKeyword, StatementSyntax elseStatement)

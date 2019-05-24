@@ -72,7 +72,7 @@ namespace Minsk.CodeAnalysis.Lowering
 
             var varDecl = new BoundVariableDeclaration(node.Variable, node.LowerBound);
             var varExpression = new BoundVariableExpression(node.Variable);
-            var upperBoundSymbol = new VariableSymbol("upperBound", true, TypeSymbol.Int);
+            var upperBoundSymbol = new LocalVariableSymbol("upperBound", true, TypeSymbol.Int);
             var upperBoundDecl = new BoundVariableDeclaration(upperBoundSymbol, node.UpperBound);
 
             var condition = new BoundBinaryExpression(

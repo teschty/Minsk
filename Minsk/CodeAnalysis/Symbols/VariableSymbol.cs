@@ -2,7 +2,7 @@
 
 namespace Minsk.CodeAnalysis.Symbols
 {
-    public class VariableSymbol : Symbol
+    public abstract class VariableSymbol : Symbol
     {
         public VariableSymbol(string name, bool isReadOnly, TypeSymbol type) : base(name)
         {

@@ -123,10 +123,27 @@ namespace Minsk.Tests.CodeAnalysis
             ";
 
             var diagnostics = @"
-                Variable 'x' is already declared.
+                'x' is already declared.
             ";
 
             AssertDiagnostics(text, diagnostics);
+        }
+
+        [Fact]
+        public void Evaluator_Variables_Can_Shadow_Functions()
+        {
+            var text = @"
+                {
+                    let print = 42
+                    [print](""test"")
+                }
+            ";
+
+             var diagnostics = @"
+                Function 'print' doesn't exist.
+            ";
+
+             AssertDiagnostics(text, diagnostics);
         }
         
         [Fact]
@@ -160,7 +177,7 @@ namespace Minsk.Tests.CodeAnalysis
         [Fact]
         public void Evaluator_NameExpression_Reports_NoErrorForInsertedToken()
         {
-            var text = @"[]";
+            var text = @"1 + []";
 
             var diagnostics = @"
                 Unexpected token <EndOfFileToken>, expected <IdentifierToken>.

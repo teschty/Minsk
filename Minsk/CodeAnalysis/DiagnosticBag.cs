@@ -68,15 +68,33 @@ namespace Minsk.CodeAnalysis
             Report(span, message);
         }
 
-        public void ReportVariableAlreadyDeclared(TextSpan span, string name)
+        internal void ReportUndefinedType(TextSpan span, string name)
         {
-            var message = $"Variable '{name}' is already declared.";
+            var message = $"Type '{name}' doesn't exist.";
+            Report(span, message);
+        }
+
+        public void ReportSymbolAlreadyDeclared(TextSpan span, string name)
+        {
+            var message = $"'{name}' is already declared.";
+            Report(span, message);
+        }
+
+        public void ReportParameterAlreadyDeclared(TextSpan span, string parameterName)
+        {
+            var message = $"A parameter with the name '{parameterName}' was already declared.";
             Report(span, message);
         }
 
         public void ReportCannotConvert(TextSpan span, TypeSymbol fromType, TypeSymbol toType)
         {
             var message = $"Cannot convert type '{fromType}' to '{toType}'.";
+            Report(span, message);
+        }
+
+        public void ReportCannotConvertImplicity(TextSpan span, TypeSymbol fromType, TypeSymbol toType)
+        {
+            var message = $"Cannot convert type '{fromType}' to '{toType}'. An explicit conversion exists (are you missing a cast?)";
             Report(span, message);
         }
 
@@ -107,6 +125,12 @@ namespace Minsk.CodeAnalysis
         public void ReportExpressionMustHaveValue(TextSpan span)
         {
             var message = $"Expression must have a value.";
+            Report(span, message);
+        }
+
+        public void XXX_ReportFunctionsAreUnsupported(TextSpan span)
+        {
+            var message = $"Function with return values are unsupported.";
             Report(span, message);
         }
     }
