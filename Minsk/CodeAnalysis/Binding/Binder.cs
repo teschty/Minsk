@@ -1,4 +1,5 @@
-﻿using Minsk.CodeAnalysis.Symbols;
+﻿using Minsk.CodeAnalysis.Lowering;
+using Minsk.CodeAnalysis.Symbols;
 using Minsk.CodeAnalysis.Syntax;
 using System;
 using System.Collections.Generic;
@@ -11,18 +12,25 @@ namespace Minsk.CodeAnalysis.Binding
     internal sealed class Binder
     {
         private readonly DiagnosticBag _diagnostics = new DiagnosticBag();
-
+        private readonly FunctionSymbol _function;
         private BoundScope _scope;
 
-        public Binder(BoundScope parent)
+        public Binder(BoundScope parent, FunctionSymbol function)
         {
             _scope = new BoundScope(parent);
+            _function = function;
+
+            if (function != null)
+            {
+                foreach (var p in function.Parameters)
+                    _scope.TryDeclareVariable(p);
+            }
         }
 
         public static BoundGlobalScope BindGlobalScope(BoundGlobalScope previous, CompilationUnitSyntax syntax)
         {
             var parentScope = CreateParentScope(previous);
-            var binder = new Binder(parentScope);
+            var binder = new Binder(parentScope, function: null);
 
             foreach (var function in syntax.Members.OfType<FunctionDeclarationSyntax>())
                 binder.BindFunctionDeclaration(function);
@@ -47,14 +55,30 @@ namespace Minsk.CodeAnalysis.Binding
             return new BoundGlobalScope(previous, diagnostics, functions, variables, statement);
         }
 
-        public static BindProgram(BoundGlobalScope globalScope)
+        public static BoundProgram BindProgram(BoundGlobalScope globalScope)
         {
-            var parentScope = CreateParentScope();
+            var parentScope = CreateParentScope(globalScope);
+            var functionBodies = ImmutableDictionary.CreateBuilder<FunctionSymbol, BoundBlockStatement>();
+            var diagnostics = new DiagnosticBag();
             
-            foreach (var function in globalScope.Functions)
+            var scope = globalScope;
+
+            while (scope != null) 
             {
-                var binder = new Binder()
+                foreach (var function in scope.Functions)
+                {
+                    var binder = new Binder(parentScope, function);
+                    var body = binder.BindStatement(function.Declaration.Body);
+                    var loweredBody = Lowerer.Lower(body);
+                    functionBodies.Add(function, loweredBody);
+
+                    diagnostics.AddRange(binder.Diagnostics);
+                }
+
+                scope = scope.Previous;
             }
+
+            return new BoundProgram(globalScope, diagnostics, functionBodies.ToImmutable());
         }
 
         private void BindFunctionDeclaration(FunctionDeclarationSyntax syntax)
@@ -82,7 +106,7 @@ namespace Minsk.CodeAnalysis.Binding
             if (type != TypeSymbol.Void)
                 _diagnostics.XXX_ReportFunctionsAreUnsupported(syntax.Type.Span);
 
-            var function = new FunctionSymbol(syntax.Identifier.Text, parameters.ToImmutable(), type);
+            var function = new FunctionSymbol(syntax.Identifier.Text, parameters.ToImmutable(), type, syntax);
             if (!_scope.TryDeclareFunction(function))
             {
                 _diagnostics.ReportSymbolAlreadyDeclared(syntax.Identifier.Span, function.Name);
@@ -437,7 +461,9 @@ namespace Minsk.CodeAnalysis.Binding
         {
             var name = identifier.Text ?? "?";
             var declare = !identifier.IsMissing;
-            var variable = new VariableSymbol(name, isReadOnly, type);
+            var variable = _function == null 
+                    ? (VariableSymbol) new GlobalVariableSymbol(name, isReadOnly, type)
+                    : new LocalVariableSymbol(name, isReadOnly, type);
 
             if (declare && !_scope.TryDeclareVariable(variable))
                 _diagnostics.ReportSymbolAlreadyDeclared(identifier.Span, name);

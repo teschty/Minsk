@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using Minsk.CodeAnalysis.Binding;
 using Minsk.CodeAnalysis.Symbols;
 
@@ -7,6 +8,7 @@ namespace Minsk.CodeAnalysis
 {
     internal sealed class Evaluator
     {
+        private readonly ImmutableDictionary<FunctionSymbol, BoundBlockStatement> _functionBodies;
         private readonly BoundBlockStatement _root;
         private readonly Dictionary<VariableSymbol, object> _globals;
         private readonly Stack<Dictionary<VariableSymbol, object>> _locals = new Stack<Dictionary<VariableSymbol, object>>();
@@ -14,8 +16,9 @@ namespace Minsk.CodeAnalysis
 
         private object _lastValue;
 
-        public Evaluator(BoundBlockStatement root, Dictionary<VariableSymbol, object> variables)
+        public Evaluator(ImmutableDictionary<FunctionSymbol, BoundBlockStatement> functionBodies, BoundBlockStatement root, Dictionary<VariableSymbol, object> variables)
         {
+            _functionBodies = functionBodies;
             _root = root;
             _globals = variables;
         }
@@ -85,8 +88,9 @@ namespace Minsk.CodeAnalysis
         private void EvaluateVariableDeclaration(BoundVariableDeclaration node)
         {
             var value = EvaluateExpression(node.Initializer);
-            _globals[node.Variable] = value;
             _lastValue = value;
+
+            Assign(node.Variable, value);
         }
 
         private void EvaluateExpressionStatement(BoundExpressionStatement node)
@@ -203,23 +207,36 @@ namespace Minsk.CodeAnalysis
 
         private object EvaluateVariableExpression(BoundVariableExpression v)
         {
-            if (_locals.Count > 0)
+            if (v.Variable.Kind != SymbolKind.GlobalVariable)
             {
                 var locals = _locals.Peek();
-
-                if (locals.TryGetValue(v.Variable, out var value)) 
-                    return value;
+                return locals[v.Variable];
             }
-            
-            return _globals[v.Variable];
+            else
+            {
+                return _globals[v.Variable];
+            }
         }
 
         private object EvaluateAssignmentExpression(BoundAssignmentExpression a)
         {
-            // TODO: we need to store locals in our stack frame, not in the global dictionary.
             var value = EvaluateExpression(a.Expression);
-            _globals[a.Variable] = value;
+            Assign(a.Variable, value);
+
             return value;
+        }
+
+        private void Assign(VariableSymbol variable, object value)
+        {
+            if (variable.Kind != SymbolKind.GlobalVariable)
+            {
+                var locals = _locals.Peek();
+                locals[variable] = value;
+            }
+            else
+            {
+                _globals[variable] = value;
+            }
         }
 
         private static object EvaluateLiteralExpression(BoundLiteralExpression n)
@@ -258,7 +275,12 @@ namespace Minsk.CodeAnalysis
                 }
 
                 _locals.Push(locals);
-                return Evaluate(node.Function);
+
+                var statement = _functionBodies[node.Function]; 
+                var result = EvaluateStatement(statement);
+
+                _locals.Pop();
+                return result;
             }
         }
 
