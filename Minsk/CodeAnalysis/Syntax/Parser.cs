@@ -129,10 +129,14 @@ namespace Minsk.CodeAnalysis.Syntax
                 var param = ParseParameter();
                 nodesAndSeparators.Add(param);
 
-                if (Current.Kind != SyntaxKind.CloseParenToken)
+                if (Current.Kind == SyntaxKind.CommaToken)
                 {
                     var comma = MatchToken(SyntaxKind.CommaToken);
                     nodesAndSeparators.Add(comma);
+                } 
+                else 
+                {
+                    break;
                 }
             }
 
@@ -415,10 +419,14 @@ namespace Minsk.CodeAnalysis.Syntax
                 var expr = ParseExpression();
                 nodesAndSeparators.Add(expr);
 
-                if (Current.Kind != SyntaxKind.CloseParenToken)
+                if (Current.Kind == SyntaxKind.CommaToken)
                 {
                     var comma = MatchToken(SyntaxKind.CommaToken);
                     nodesAndSeparators.Add(comma);
+                } 
+                else 
+                {
+                    break;
                 }
             }
 
