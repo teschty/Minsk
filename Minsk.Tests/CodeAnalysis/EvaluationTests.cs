@@ -73,6 +73,14 @@ namespace Minsk.Tests.CodeAnalysis
         [InlineData("false", false)]
         [InlineData("!true", false)]
         [InlineData("!false", true)]
+        [InlineData("var a = 10", 10)]
+
+        [InlineData("\"test\"", "test")]
+        [InlineData("\"test\" == \"test\"", true)]
+        [InlineData("\"test\" != \"test\"", false)]
+        [InlineData("\"test\" == \"nottest\"", false)]
+        [InlineData("\"test\" != \"nottest\"", true)]
+
         [InlineData("{ var a = 0 (a = 10) * a }", 100)]
         [InlineData("{ var a = 0 if a == 0 a = 10 a}", 10)]
         [InlineData("{ var a = 0 if a == 4 a = 10 a}", 0)]
@@ -103,7 +111,7 @@ namespace Minsk.Tests.CodeAnalysis
                 Cannot convert type 'int' to 'bool'.
             ";
 
-             AssertDiagnostics(text, diagnostics);
+            AssertDiagnostics(text, diagnostics);
         }
 
         [Fact]
@@ -139,13 +147,13 @@ namespace Minsk.Tests.CodeAnalysis
                 }
             ";
 
-             var diagnostics = @"
+            var diagnostics = @"
                 Function 'print' doesn't exist.
             ";
 
-             AssertDiagnostics(text, diagnostics);
+            AssertDiagnostics(text, diagnostics);
         }
-        
+
         [Fact]
         public void Evaluator_BlockStatement_NoInfiniteLoop()
         {
@@ -185,7 +193,7 @@ namespace Minsk.Tests.CodeAnalysis
 
             AssertDiagnostics(text, diagnostics);
         }
-        
+
         [Fact]
         public void Evaluator_AssignmentExpression_Reports_Undefined()
         {
@@ -227,6 +235,43 @@ namespace Minsk.Tests.CodeAnalysis
 
             var diagnostics = @"
                 Cannot convert type 'bool' to 'int'.
+            ";
+
+            AssertDiagnostics(text, diagnostics);
+        }
+
+        [Fact]
+        public void Evaluator_InvokeFunctionArguments_NoInfiniteLoop()
+        {
+            var text = @"
+                print(""Hi""[[=]][)]
+            ";
+
+            var diagnostics = @"
+                Unexpected token <EqualsToken>, expected <CloseParenToken>.
+                Unexpected token <EqualsToken>, expected <IdentifierToken>.
+                Unexpected token <CloseParenToken>, expected <IdentifierToken>.
+            ";
+
+            AssertDiagnostics(text, diagnostics);
+        }
+
+        [Fact]
+        public void Evaluator_FunctionParameters_NoInfiniteLoop()
+        {
+            var text = @"
+                function hi(name: string[[[=]]][)]
+                {
+                    print(""Hi "" + name + ""!"" )
+                }[]
+            ";
+
+            var diagnostics = @"
+                Unexpected token <EqualsToken>, expected <CloseParenToken>.
+                Unexpected token <EqualsToken>, expected <OpenBraceToken>.
+                Unexpected token <EqualsToken>, expected <IdentifierToken>.
+                Unexpected token <CloseParenToken>, expected <IdentifierToken>.
+                Unexpected token <EndOfFileToken>, expected <CloseBraceToken>.
             ";
 
             AssertDiagnostics(text, diagnostics);
@@ -353,7 +398,7 @@ namespace Minsk.Tests.CodeAnalysis
 
             Assert.Equal(expectedDiagnostics.Length, result.Diagnostics.Length);
 
-            for (var i = 0; i < expectedDiagnostics.Length; i++) 
+            for (var i = 0; i < expectedDiagnostics.Length; i++)
             {
                 var expectedMessage = expectedDiagnostics[i];
                 var actualMessage = result.Diagnostics[i].Message;
