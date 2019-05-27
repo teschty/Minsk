@@ -46,6 +46,8 @@
         ToKeyword,
         DoKeyword,
         FunctionKeyword,
+        BreakKeyword,
+        ContinueKeyword,
 
         // Nodes
         CompilationUnit,
@@ -63,6 +65,8 @@
         WhileStatement,
         ForStatement,
         DoWhileStatement,
+        ContinueStatement,
+        BreakStatement,
 
         // Expressions
         LiteralExpression,
