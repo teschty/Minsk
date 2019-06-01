@@ -264,7 +264,7 @@ namespace Minsk.Tests.CodeAnalysis
             ";
 
              var diagnostics = @"
-                Function 'print' requires 1 argument(s), but was given 0.
+                Function 'print' expects 1 argument(s), but was given 0.
             ";
 
              AssertDiagnostics(text, diagnostics);
@@ -278,7 +278,7 @@ namespace Minsk.Tests.CodeAnalysis
             ";
 
              var diagnostics = @"
-                Function 'print' requires 1 argument(s), but was given 3.
+                Function 'print' expects 1 argument(s), but was given 3.
             ";
 
              AssertDiagnostics(text, diagnostics);
