@@ -134,9 +134,21 @@ namespace Minsk.CodeAnalysis
             Report(span, message);
         }
 
-        public void XXX_ReportFunctionsAreUnsupported(TextSpan span)
+        public void ReportInvalidReturn(TextSpan span)
         {
-            var message = $"Function with return values are unsupported.";
+            var message = $"The 'return' keyword may only be used inside of functions.";
+            Report(span, message);
+        }
+
+        public void ReportInvalidReturnExpression(TextSpan span, string functionName)
+        {
+            var message = $"Since '{functionName}' returns void, the return keyword must not be followed by an expression.";
+            Report(span, message);
+        }
+
+        public void ReportMissingReturnExpression(TextSpan span, string functionName, TypeSymbol returnType)
+        {
+            var message = $"An expression of type '{returnType}' expected.";
             Report(span, message);
         }
     }

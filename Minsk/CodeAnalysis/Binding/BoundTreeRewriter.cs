@@ -28,6 +28,8 @@ namespace Minsk.CodeAnalysis.Binding
                     return RewriteLabelStatement((BoundLabelStatement)node);
                 case BoundNodeKind.GotoStatement:
                     return RewriteGotoStatement((BoundGotoStatement)node);
+                case BoundNodeKind.ReturnStatement:
+                    return RewriteReturnStatement((BoundReturnStatement)node);
                 case BoundNodeKind.ConditionalGotoStatement:
                     return RewriteConditionalGotoStatement((BoundConditionalGotoStatement)node);
 
@@ -49,6 +51,16 @@ namespace Minsk.CodeAnalysis.Binding
         protected virtual BoundStatement RewriteGotoStatement(BoundGotoStatement node)
         {
             return node;
+        }
+
+        private BoundStatement RewriteReturnStatement(BoundReturnStatement node)
+        {
+            var expr = node.Expression == null ? null : RewriteExpression(node.Expression);
+
+            if (expr == node.Expression)
+                return node;
+
+            return new BoundReturnStatement(expr);
         }
 
         protected virtual BoundStatement RewriteLabelStatement(BoundLabelStatement node)
