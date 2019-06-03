@@ -27,7 +27,7 @@ namespace Minsk.CodeAnalysis
 
         internal void ReportInvalidNumber(TextSpan span, string text, TypeSymbol type)
         {
-            var message = $"The number {text} isn't valid {type}.";
+            var message = $"The number {text} isn't a valid {type}.";
             Report(span, message);
         }
 
@@ -131,6 +131,12 @@ namespace Minsk.CodeAnalysis
         public void ReportInvalidBreakOrContinue(TextSpan span, string text)
         {
             var message = $"The keyword '{text}' is only valid inside inside loops.";
+            Report(span, message);
+        }
+
+        internal void ReportAllPathsMustReturn(TextSpan span)
+        {
+            var message = $"Not all code paths return a value.";
             Report(span, message);
         }
 
