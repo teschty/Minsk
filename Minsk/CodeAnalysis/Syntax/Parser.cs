@@ -178,6 +178,8 @@ namespace Minsk.CodeAnalysis.Syntax
                     return ParseBreakStatement();
                 case SyntaxKind.ContinueKeyword:
                     return ParseContinueStatement();
+                case SyntaxKind.ReturnKeyword:
+                    return ParseReturnStatment();
 
                 default:
                     return ParseExpressionStatement();
@@ -235,6 +237,18 @@ namespace Minsk.CodeAnalysis.Syntax
         {
             var keyword = MatchToken(SyntaxKind.ContinueKeyword);
             return new ContinueStatementSyntax(keyword); 
+        }
+
+        private StatementSyntax ParseReturnStatment()
+        {
+            var keyword = MatchToken(SyntaxKind.ReturnKeyword);
+            var keywordLine = _text.GetLineIndex(keyword.Span.Start);
+            var currentLine = _text.GetLineIndex(Current.Span.Start);
+            var isEof = Current.Kind == SyntaxKind.EndOfFileToken;
+            var sameLine = !isEof && keywordLine == currentLine;
+            var expr = sameLine ? ParseExpression() : null;
+
+            return new ReturnStatementSyntax(keyword, expr);
         }
 
         private ElseClauseSyntax ParseElseClause()

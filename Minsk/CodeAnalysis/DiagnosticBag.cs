@@ -27,7 +27,7 @@ namespace Minsk.CodeAnalysis
 
         internal void ReportInvalidNumber(TextSpan span, string text, TypeSymbol type)
         {
-            var message = $"The number {text} isn't valid {type}.";
+            var message = $"The number {text} isn't a valid {type}.";
             Report(span, message);
         }
 
@@ -134,9 +134,27 @@ namespace Minsk.CodeAnalysis
             Report(span, message);
         }
 
-        public void XXX_ReportFunctionsAreUnsupported(TextSpan span)
+        internal void ReportAllPathsMustReturn(TextSpan span)
         {
-            var message = $"Function with return values are unsupported.";
+            var message = $"Not all code paths return a value.";
+            Report(span, message);
+        }
+
+        public void ReportInvalidReturn(TextSpan span)
+        {
+            var message = $"The 'return' keyword may only be used inside of functions.";
+            Report(span, message);
+        }
+
+        public void ReportInvalidReturnExpression(TextSpan span, string functionName)
+        {
+            var message = $"Since '{functionName}' returns void, the return keyword must not be followed by an expression.";
+            Report(span, message);
+        }
+
+        public void ReportMissingReturnExpression(TextSpan span, string functionName, TypeSymbol returnType)
+        {
+            var message = $"An expression of type '{returnType}' expected.";
             Report(span, message);
         }
     }

@@ -48,6 +48,9 @@ namespace Minsk.CodeAnalysis.Binding
                 case BoundNodeKind.ConditionalGotoStatement: 
                     WriteConditionalGotoStatement((BoundConditionalGotoStatement)node, writer);
                     break;
+                case BoundNodeKind.ReturnStatement: 
+                    WriteReturnStatement((BoundReturnStatement)node, writer);
+                    break;
                 case BoundNodeKind.DoWhileStatement: 
                     WriteDoWhileStatement((BoundDoWhileStatement)node, writer);
                     break;
@@ -226,6 +229,17 @@ namespace Minsk.CodeAnalysis.Binding
             writer.WriteIdentifier(node.Label.Name);
             writer.WriteKeyword(node.JumpIfTrue ? " if " : " unless ");
             node.Condition.WriteTo(writer);
+            writer.WriteLine();
+        }
+
+        private static void WriteReturnStatement(BoundReturnStatement node, IndentedTextWriter writer)
+        {
+            writer.WriteKeyword(SyntaxKind.ReturnKeyword);
+            writer.WriteSpace();
+
+            if (node.Expression != null)
+                node.Expression.WriteTo(writer);
+            
             writer.WriteLine();
         }
 
